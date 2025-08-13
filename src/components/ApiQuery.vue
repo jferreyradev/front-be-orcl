@@ -31,6 +31,19 @@
 }'
           ></textarea>
         </label>
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Content-Type</span></div>
+          <select v-model="contentType" class="select select-bordered w-full">
+            <option value="application/json">application/json</option>
+            <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+            <option value="text/plain">text/plain</option>
+            <option value="multipart/form-data">multipart/form-data</option>
+          </select>
+        </label>
+        <label class="form-control w-full">
+          <div class="label"><span class="label-text">Autorización (Bearer)</span></div>
+          <input type="text" v-model="bearer" class="input input-bordered w-full" placeholder="Token Bearer" />
+        </label>
     </div>
     <div class="card-actions justify-end">
       <button @click="consultarApi" class="btn btn-primary w-full mt-2" :disabled="loading">
@@ -48,8 +61,8 @@ import { ref, watch } from 'vue';
 import { useQueryHistory } from '../composables/useQueryHistory.js';
 import { normalizeJson } from '../utils/normalizeJson.js';
 import { useResultadoStore } from '../stores/resultado';
-import { useApiFetch } from '../composables/useApiFetch.js';
 import { usePeticionStore } from '../stores/peticion';
+import { useApiFetch } from '../composables/useApiFetch.js';
 
 function isValidJson(str) {
   if (typeof str !== 'string') return false;
@@ -79,6 +92,10 @@ const showError = ref(true);
 const showWarning = ref(false);
 const showInfo = ref(true);
 const toast = ref({ show: false, type: 'info', message: '', icon: '', duration: 3000 });
+const contentType = ref('application/json');
+const bearer = ref('');
+const showAuthError = ref(false);
+const authErrorMsg = ref('');
 
 const api = useApiFetch();
 const { history, addQuery, clearHistory } = useQueryHistory();
@@ -120,12 +137,26 @@ async function consultarApi() {
     }
   }
   try {
-    const { result, error: apiError } = await api.fetchApi({
+    const headers = {};
+    if (contentType.value) headers['Content-Type'] = contentType.value;
+    if (bearer.value) headers['Authorization'] = `Bearer ${bearer.value}`;
+    const { result, error: apiError, status } = await api.fetchApi({
       url: url.value,
       method: metodo.value,
       body: metodo.value === 'POST' ? normalizeJson(body.value) : null,
-      params: metodo.value === 'GET' ? parametro.value : ''
+      params: metodo.value === 'GET' ? parametro.value : '',
+      headers
     });
+    console.log('API status:', status);
+    console.log('API result:', result);
+    console.log('API error:', apiError);
+    if (status === 401) {
+      showAuthError.value = true;
+      authErrorMsg.value = 'Error de autenticación: token inválido o expirado.';
+      resultadoStore.setLoading(false);
+      loading.value = false;
+      return;
+    }
     if (apiError) throw new Error(apiError);
     resultado.value = result;
     resultadoStore.setResultado(result);
@@ -135,7 +166,9 @@ async function consultarApi() {
       url: url.value,
       metodo: metodo.value,
       parametro: parametro.value,
-      body: metodo.value === 'POST' && body.value ? normalizeJson(body.value) : body.value
+      body: metodo.value === 'POST' && body.value ? normalizeJson(body.value) : body.value,
+      contentType: contentType.value,
+      bearer: bearer.value
     };
     peticionStore.setPeticion(peticionPayload);
     addQuery(peticionPayload);

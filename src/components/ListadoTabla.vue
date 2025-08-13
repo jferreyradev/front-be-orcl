@@ -1,6 +1,6 @@
 <template>
-  <div v-if="rows && rows.length" class="overflow-auto resize both border-2 border-primary rounded mt-4 max-h-[80vh] min-h-[120px]" style="resize: both;">
-    <table class="table table-xs">
+  <div class="overflow-auto w-full">
+    <table class="table table-sm table-zebra w-full">
       <thead>
         <tr>
           <th v-for="col in columns" :key="col" class="text-xs font-bold uppercase">{{ col }}</th>
@@ -12,17 +12,17 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="!rows.length" class="text-sm text-gray-400 mt-4">No hay datos para mostrar.</div>
   </div>
-  <div v-else class="text-sm text-gray-400 mt-4">No hay datos para mostrar.</div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 const props = defineProps({
-  data: { type: Array, default: () => [] }
+  items: { type: Array, default: () => [] },
+  title: { type: String, default: '' }
 });
-
-const rows = computed(() => Array.isArray(props.data) ? props.data : []);
+const rows = computed(() => Array.isArray(props.items) ? props.items : []);
 const columns = computed(() => {
   if (!rows.value.length) return [];
   return Object.keys(rows.value[0]);

@@ -20,6 +20,13 @@
       >
         Descargar consulta
       </button>
+      <button
+        v-if="peticion"
+        @click="descargarPeticion"
+        class="btn btn-outline btn-sm mt-2"
+      >
+        Descargar petición
+      </button>
       <div v-if="peticion && peticion.body" class="mt-6">
         <h3 class="text-base font-semibold mb-2">
           Body de la petición (JSON):
@@ -29,17 +36,19 @@
         >
           {{ formatJson(peticion.body) }}
         </pre>
-        <div>
-          <button @click="copiarBody" class="btn btn-outline btn-xs mt-2">
-            Copiar body
-          </button>
-          <button
-            v-if="peticion"
-            @click="descargarPeticion"
-            class="btn btn-outline btn-xs mt-2"
-          >
-            Descargar petición
-          </button>
+        <button @click="copiarBody" class="btn btn-outline btn-xs mt-2">
+          Copiar body
+        </button>
+      </div>
+      <div v-if="peticion" class="mt-6">
+        <h3 class="text-base font-semibold mb-2">Headers de la petición:</h3>
+        <div class="text-xs text-gray-700 mb-1">
+          Content-Type:
+          <span class="font-mono">{{ peticion.contentType }}</span>
+        </div>
+        <div class="text-xs text-gray-700 mb-1">
+          Bearer:
+          <span class="font-mono">{{ peticion.bearer }}</span>
         </div>
       </div>
     </div>

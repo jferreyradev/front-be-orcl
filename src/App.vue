@@ -49,11 +49,23 @@ function getTableData() {
       </select>
     </template>
     <template #sidebar>
-      <nav class="flex flex-col gap-4">
-        <h2 class="text-base font-semibold text-primary mb-2">Opciones</h2>
-        <router-link to="/" class="link link-hover text-base-content">Inicio</router-link>
-        <router-link to="/consultas" class="link link-hover text-base-content">Consultas API</router-link>
-        <router-link to="/configuracion" class="link link-hover text-base-content">Configuración</router-link>
+      <nav class="flex flex-col gap-2 py-8 px-2 w-full">
+        <router-link to="/" class="py-2 px-2 hover:bg-base-200 rounded">Inicio</router-link>
+        
+        <details open class="w-full">
+          <summary class="py-2 px-2 font-semibold cursor-pointer hover:bg-base-200 rounded">Liquidación</summary>
+          <ul class="ml-4 mt-1 flex flex-col gap-1">
+            <li><router-link to="/procesos" class="py-1 px-2 hover:bg-base-100 rounded">Procesos ejecutados</router-link></li>
+            <li><router-link to="/ejecutar-consulta" class="py-1 px-2 hover:bg-base-100 rounded">Ejecutar consulta</router-link></li>
+            <li><router-link to="/ejecutar-sql" class="py-1 px-2 hover:bg-base-100 rounded">Ejecutar SQL libre</router-link></li>
+          </ul>
+        </details>
+        <details class="w-full">
+          <summary class="py-2 px-2 font-semibold cursor-pointer hover:bg-base-200 rounded">Desarrollo</summary>
+          <ul class="ml-4 mt-1 flex flex-col gap-1">
+            <li><router-link to="/consultas" class="py-1 px-2 hover:bg-base-100 rounded">Consultas API</router-link></li>
+          </ul>
+        </details>
       </nav>
     </template>
     <template #main>
@@ -63,10 +75,7 @@ function getTableData() {
       <div v-if="loading" class="flex items-center justify-center h-32">
         <span class="loading loading-spinner loading-lg text-primary"></span>
         <span class="ml-4 text-base text-primary">Cargando resultado...</span>
-      </div>
-      
-      <JsonResult v-else-if="resultado" :json="normalizeJson(resultado)" />
-      <div v-else class="text-sm text-gray-400 mt-4">No hay resultado para mostrar.</div>
+      </div>    
     </template>
     <template #footer>
       &copy; 2025 API Demo - Powered by Vue, Vite, DaisyUI
