@@ -1,11 +1,13 @@
 // Composable para llamadas a API
 import { ref } from 'vue';
+// ...existing code...
 
 export function useApiFetch() {
   const loading = ref(false);
   const error = ref(null);
   const result = ref(null);
 
+  // ...existing code...
   async function fetchApi({ url, method = 'GET', body = null, params = '', headers = {} }) {
     loading.value = true;
     error.value = null;
@@ -18,6 +20,7 @@ export function useApiFetch() {
     if (method === 'POST') {
       defaultHeaders['Content-Type'] = 'application/json';
     }
+  // ...existing code...
     // Fusionar headers personalizados
     const mergedHeaders = { ...defaultHeaders, ...headers };
     const options = { method, headers: mergedHeaders };

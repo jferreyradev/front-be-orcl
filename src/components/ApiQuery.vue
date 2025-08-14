@@ -94,8 +94,6 @@ const showInfo = ref(true);
 const toast = ref({ show: false, type: 'info', message: '', icon: '', duration: 3000 });
 const contentType = ref('application/json');
 const bearer = ref('');
-const showAuthError = ref(false);
-const authErrorMsg = ref('');
 
 const api = useApiFetch();
 const { history, addQuery, clearHistory } = useQueryHistory();
@@ -139,7 +137,6 @@ async function consultarApi() {
   try {
     const headers = {};
     if (contentType.value) headers['Content-Type'] = contentType.value;
-    if (bearer.value) headers['Authorization'] = `Bearer ${bearer.value}`;
     const { result, error: apiError, status } = await api.fetchApi({
       url: url.value,
       method: metodo.value,
@@ -151,8 +148,6 @@ async function consultarApi() {
     console.log('API result:', result);
     console.log('API error:', apiError);
     if (status === 401) {
-      showAuthError.value = true;
-      authErrorMsg.value = 'Error de autenticación: token inválido o expirado.';
       resultadoStore.setLoading(false);
       loading.value = false;
       return;

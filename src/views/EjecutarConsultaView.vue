@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { consultas } from '../consultas';
 import { useApiFetch } from '../composables/useApiFetch';
+import ListadoTabla from '../components/ListadoTabla.vue';
 
 const consultaSeleccionada = ref(Object.values(consultas)[0]);
 const resultado = ref([]);
@@ -15,11 +16,13 @@ async function ejecutarConsulta() {
   resultado.value = [];
   let url = consultaSeleccionada.value.url;
   let method = consultaSeleccionada.value.method || 'GET';
-  let body = undefined;
+  let body = {};
   if (method === 'POST' && consultaSeleccionada.value.sql) {
     body = { sql: consultaSeleccionada.value.sql };
   }
+  console.log('Ejecutando consulta:', { url, method, body });
   const { result, error: apiError } = await api.fetchApi({ url, method, body });
+  console.log('Resultado de la consulta:', result, 'Error:', apiError);
   if (Array.isArray(result)) {
     resultado.value = result;
   } else if (result && Array.isArray(result.data)) {
@@ -48,8 +51,7 @@ async function ejecutarConsulta() {
     </div>
     <div v-if="consultaSeleccionada.descripcion" class="mb-4 text-base text-gray-500">{{ consultaSeleccionada.descripcion }}</div>
 
-  <ListadoTabla :items="resultado" title="Resultado de la consulta" />
-    <div v-if="!resultado.length && !loading && !error" class="text-sm text-gray-400 mt-4">No hay datos para mostrar.</div>
-    <div v-if="error" class="text-error mt-4">Error: {{ error }}</div>
+    <ListadoTabla :items="resultado" title="Resultado de la consulta" />
+
   </div>
 </template>
