@@ -2,14 +2,17 @@
   <div>
     <div class="overflow-x-auto w-full max-h-96 overflow-y-auto">
       <table class="table table-sm table-zebra w-full">
-        <thead>
+        <thead class="sticky top-0 bg-white z-10">
           <tr>
             <th v-for="col in columns" :key="col" class="text-xs font-bold uppercase">{{ col }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(row, idx) in rows" :key="idx">
-            <td v-for="col in columns" :key="col" class="text-xs">{{ row[col] }}</td>
+            <td v-for="col in columns" :key="col"
+                :class="props.numericFields.includes(col)||props.integerFields.includes(col) ? 'text-xs text-right font-mono' : 'text-xs'">
+              {{ formatCell(row[col], col) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -64,9 +67,46 @@ function exportWithName(data) {
     exportExcel(columns.value, rows.value, name.endsWith('.xls') ? name : name + '.xls');
   }
 }
+function formatCell(value, col) {
+  if (props.numericFields.includes(col) && !isNaN(value)) {
+    return formatNumberFlexible(value,2);
+    //return Number(value).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  return value;
+}
+
+ 
+function formatNumberFlexible(input, decimales = 2) {
+  let [integerPart, decimalPart] = input.split(",");
+  let num;
+
+  if (decimalPart) {
+    // Unir parte entera y decimal para crear el número real
+    num = Number(integerPart) + Number("0." + decimalPart.replace(/\D/g, ""));
+  } else {
+    num = Number(integerPart);
+  }
+
+  // Si decimales es 0 y es entero, mostrar solo el entero
+  if (decimales === 0 || Number.isInteger(num)) {
+    return num.toLocaleString('es-ES', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  } else {
+    return num.toLocaleString('es-ES', {
+      minimumFractionDigits: decimales,
+      maximumFractionDigits: decimales,
+    });
+  }
+}
+
+
 const props = defineProps({
   items: { type: Array, default: () => [] },
-  title: { type: String, default: '' }
+  title: { type: String, default: '' },
+  numericFields: { type: Array, default: () => [] },
+  integerFields: { type: Array, default: () => [] }
 });
 const rows = computed(() => Array.isArray(props.items) ? props.items : []);
 const columns = computed(() => {

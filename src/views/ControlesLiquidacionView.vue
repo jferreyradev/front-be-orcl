@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { consultas } from '../consultas';
 import { useApiFetch } from '../composables/useApiFetch';
 import ListadoTabla from '../components/ListadoTabla.vue';
+import { consultasControl } from '../consultas';
 
-const consultaSeleccionada = ref(Object.values(consultas)[0]);
+const consultaSeleccionada = ref(Object.values(consultasControl)[0]);
 const resultado = ref([]);
 const loading = ref(false);
 const error = ref(null);
@@ -40,7 +40,7 @@ async function ejecutarConsulta() {
     <h2 class="text-2xl font-bold text-primary mb-6">Controles de liquidaciones</h2>
     <div class="flex flex-col md:flex-row gap-4 mb-6 items-center">
       <select v-model="consultaSeleccionada" class="select select-bordered w-full md:w-auto">
-        <option v-for="(consulta, key) in consultas" :key="key" :value="consulta">
+        <option v-for="(consulta, key) in consultasControl" :key="key" :value="consulta">
           {{ consulta.nombre }}
         </option>
       </select>
@@ -51,7 +51,7 @@ async function ejecutarConsulta() {
     </div>
     <div v-if="consultaSeleccionada.descripcion" class="mb-4 text-base text-gray-500">{{ consultaSeleccionada.descripcion }}</div>
 
-    <ListadoTabla :items="resultado" title="Resultado de la consulta" />
+    <ListadoTabla :items="resultado"  title="Resultado de la consulta" :numericFields="['IMPORTE']"  />
 
   </div>
 </template>
