@@ -9,6 +9,7 @@ import ResultadosView from './views/ResultadosView.vue';
 import ProcesosView from './views/ProcesosView.vue';
 import InicioView from './views/InicioView.vue';
 import EjecutarConsultaView from './views/EjecutarConsultaView.vue';
+import ControlesLiquidacionView from './views/ControlesLiquidacionView.vue';
 import { createPinia } from 'pinia';
 
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
   { path: '/procesos', name: 'Procesos', component: ProcesosView },
   { path: '/ejecutar-consulta', name: 'EjecutarConsulta', component: EjecutarConsultaView },
   { path: '/ejecutar-sql', name: 'EjecutarSql', component: EjecutarSqlView },
+  { path: '/controlesLiquidacion', name: 'ControlesLiquidacion', component: ControlesLiquidacionView },
 ]
 
 const router = createRouter({

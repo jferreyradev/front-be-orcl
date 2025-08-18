@@ -76,6 +76,7 @@ function getTableData() {
               <li><router-link to="/procesos" class="py-1 px-2 hover:bg-base-100 rounded">Procesos ejecutados</router-link></li>
               <li><router-link to="/ejecutar-consulta" class="py-1 px-2 hover:bg-base-100 rounded">Ejecutar consultas configuradas</router-link></li>
               <li><router-link to="/ejecutar-sql" class="py-1 px-2 hover:bg-base-100 rounded">Ejecutar SQL libre</router-link></li>
+              <li><router-link to="/controlesLiquidacion" class="py-1 px-2 hover:bg-base-100 rounded">Controles de Liquidación</router-link></li>
             </ul>
           </details>
           <details class="w-full">
