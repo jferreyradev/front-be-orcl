@@ -2,9 +2,9 @@
   <div>
     <div class="overflow-x-auto w-full max-h-96 overflow-y-auto">
       <table class="table table-sm table-zebra w-full">
-        <thead class="sticky top-0 bg-white z-10">
+        <thead class="sticky top-0 bg-blue-600 text-white z-10">
           <tr>
-            <th v-for="col in columns" :key="col" class="text-xs font-bold uppercase">{{ col }}</th>
+            <th v-for="col in columns" :key="col" class="text-xs">{{ col }}</th>
           </tr>
         </thead>
         <tbody>
@@ -69,37 +69,26 @@ function exportWithName(data) {
 }
 function formatCell(value, col) {
   if (props.numericFields.includes(col) && !isNaN(value)) {
-    return formatNumberFlexible(value,2);
-    //return Number(value).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return formatNumber(value);   
   }
   return value;
 }
 
  
-function formatNumberFlexible(input, decimales = 2) {
-  let [integerPart, decimalPart] = input.split(",");
-  let num;
-
-  if (decimalPart) {
-    // Unir parte entera y decimal para crear el número real
-    num = Number(integerPart) + Number("0." + decimalPart.replace(/\D/g, ""));
-  } else {
-    num = Number(integerPart);
-  }
-
-  // Si decimales es 0 y es entero, mostrar solo el entero
-  if (decimales === 0 || Number.isInteger(num)) {
-    return num.toLocaleString('es-ES', {
+function formatNumber(num, decimales = 2) {
+  
+  if (Number.isInteger(num) ) {
+    return Number(num).toLocaleString('es-ES', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
-  } else {
+  }
+
     return num.toLocaleString('es-ES', {
       minimumFractionDigits: decimales,
       maximumFractionDigits: decimales,
     });
   }
-}
 
 
 const props = defineProps({

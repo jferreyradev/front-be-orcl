@@ -1,12 +1,12 @@
 export const consultas = {
   cargos: {
     nombre: "Cargos de cargos",
-    url: "http://localhost:9000/tabla/usuario.cargo?limit=15",
+    url: "tabla/usuario.cargo?limit=15",
     descripcion: "Consulta los cargos de cargos",
   },
   procesos: {
     nombre: "Procesos ejecutados",
-    url: "http://localhost:9000/consulta",
+    url: "consulta",
     method: "POST",
     descripcion: "Lista de procesos ejecutados",
     sql: `SELECT ed.ID_PROC_DET,
@@ -23,18 +23,15 @@ order by o.orden, ec.fechahora, ED.ORDENEJEC`,
   },
   tipoliq: {
     nombre: "Liquidaciones",
-    url: "http://localhost:9000/tabla/usuario.tabtipoliquidacion",
+    url: "tabla/usuario.tabtipoliquidacion",
     descripcion: "Tipo de liquidaciones",
-  }
-};
-
-export const consultasControl = {  
+  },
   ctrlIncDoc: {
-    nombre: "Procesos ejecutados",
-    url: "http://10.6.150.91:9000/consulta",
+    nombre: "Control Inc Doc",
+    url: "consulta",
     method: "POST",
-    descripcion: "Lista de procesos ejecutados",
-    sql: ` select c.idrep, l.idtipoliquidacion, l.idgrupo, con.codigo,sum(li.IMP) IMPORTE, count(li.imp) CANTIDAD
+    descripcion: "Resumen de liquidacion",
+    sql: `select c.idrep, l.idtipoliquidacion, l.idgrupo, con.codigo,sum(li.IMP) IMPORTE, count(li.imp) CANTIDAD
     from usuario.cargo c
     inner join usuario.liquidacion l on l.idocupcarg = c.idocupcarg
     inner join usuario.liquidacionitem li on li.idliq = l.idliq
@@ -42,7 +39,28 @@ export const consultasControl = {
     where l.idtipoliquidacion in (6,8)
     and l.idgrupo in (1, 2 ,3)
     and c.idestadocargo = 1 and c.fechabaja is null
-    --and periodo = to_date('01/02/2013','dd/mm/yyyy')
+    and l.FECHAEMISION = usuario.f_activo
+    and l.idtipoliquidacion = c.idtipoliquidacion
+    and c.idrep in (18,21,25,26,27)
+    group by rollup((l.idtipoliquidacion,  l.idgrupo), (c.idrep,con.codigo))
+    order by l.idtipoliquidacion,l.idgrupo`,
+  },
+};
+
+export const consultasControl = {  
+  ctrlIncDoc: {
+    nombre: "Control Inc Doc",
+    url: "consulta",
+    method: "POST",
+    descripcion: "Resumen de liquidacion",
+    sql: `select c.idrep, l.idtipoliquidacion, l.idgrupo, con.codigo,sum(li.IMP) IMPORTE, count(li.imp) CANTIDAD
+    from usuario.cargo c
+    inner join usuario.liquidacion l on l.idocupcarg = c.idocupcarg
+    inner join usuario.liquidacionitem li on li.idliq = l.idliq
+    inner join usuario.concepto con on con.idconcepto = li.idconcepto and con.codigo = 0
+    where l.idtipoliquidacion in (6,8)
+    and l.idgrupo in (1, 2 ,3)
+    and c.idestadocargo = 1 and c.fechabaja is null
     and l.FECHAEMISION = usuario.f_activo
     and l.idtipoliquidacion = c.idtipoliquidacion
     and c.idrep in (18,21,25,26,27)
@@ -51,7 +69,7 @@ export const consultasControl = {
   },
   tipoliq: {
     nombre: "Liquidaciones",
-    url: "http://localhost:9000/tabla/usuario.tabtipoliquidacion",
+    url: "tabla/usuario.tabtipoliquidacion",
     descripcion: "Tipo de liquidaciones",
   }
 };

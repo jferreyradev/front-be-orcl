@@ -2,7 +2,10 @@
 import { ref, computed } from 'vue';
 import { consultas } from '../consultas';
 import { useApiFetch } from '../composables/useApiFetch';
+import { useApiUrlStore } from '../stores/apiUrl.js';
 import ListadoTabla from '../components/ListadoTabla.vue';
+
+const apiUrlStore = useApiUrlStore();
 
 const consultaSeleccionada = ref(Object.values(consultas)[0]);
 const resultado = ref([]);
@@ -14,9 +17,16 @@ async function ejecutarConsulta() {
   loading.value = true;
   error.value = null;
   resultado.value = [];
-  let url = consultaSeleccionada.value.url;
+
+  console.log('Depuracion:', apiUrlStore.value);
+  
+  console.log(consultaSeleccionada.value.url);
+
+  let url = apiUrlStore.url + consultaSeleccionada.value.url;
+
   let method = consultaSeleccionada.value.method || 'GET';
   let body = {};
+
   if (method === 'POST' && consultaSeleccionada.value.sql) {
     body = { sql: consultaSeleccionada.value.sql };
   }
