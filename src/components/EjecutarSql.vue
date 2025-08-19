@@ -26,7 +26,9 @@
 import { ref } from "vue";
 import { useApiFetch } from "../composables/useApiFetch.js";
 import ListadoTabla from "./ListadoTabla.vue";
+import { useApiUrlStore } from '../stores/apiUrl.js';
 
+const apiUrlStore = useApiUrlStore();
 const sql = ref("");
 const resultado = ref([]);
 const loading = ref(false);
@@ -38,7 +40,7 @@ async function ejecutar() {
   error.value = null;
   resultado.value = [];
   const { result, error: apiError } = await api.fetchApi({
-    url: "http://localhost:9000/consulta",
+    url: `${apiUrlStore.url}consulta`,
     method: "POST",
     body: { sql: sql.value },
   });

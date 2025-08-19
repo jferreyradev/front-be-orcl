@@ -61,7 +61,7 @@ async function ejecutarConsulta() {
     </div>
     <div v-if="consultaSeleccionada.descripcion" class="mb-4 text-base text-gray-500">{{ consultaSeleccionada.descripcion }}</div>
 
-    <ListadoTabla :items="resultado" title="Resultado de la consulta" />
+    <ListadoTabla :items="resultado" title="Resultado de la consulta" :numericFields="['IMPORTE','CANTIDAD']" />
 
   </div>
 </template>
