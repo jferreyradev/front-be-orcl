@@ -128,24 +128,33 @@ function getTableData() {
               </details>
             </li>
           </ul>
-            <ul class="menu bg-base-200 rounded-box w-56">
-              <li>
-                <details open>
-                  <summary>Desarrollo</summary>
-                  <ui>
-                    <li>
-                      <a>
-                        <router-link
-                          to="/ejecutar-sql"
-                          class="py-1 px-2 hover:bg-base-100 rounded"
-                          >Ejecutar SQL libre</router-link
-                        >
-                      </a>
-                    </li>
-                  </ui>
-                </details>
-              </li>
-            </ul>
+          <ul class="menu bg-base-200 rounded-box w-56">
+            <li>
+              <details open>
+                <summary>Desarrollo</summary>
+                <ul>
+                  <li>
+                    <a>
+                      <router-link
+                        to="/ejecutar-sql"
+                        class="py-1 px-2 hover:bg-base-100 rounded"
+                        >Ejecutar SQL libre</router-link
+                      >
+                    </a>
+                  </li>
+                  <li>
+                    <a>
+                      <router-link
+                        to="/exportselector"
+                        class="py-1 px-2 hover:bg-base-100 rounded"
+                        >Carga ex bnancarios</router-link
+                      >
+                    </a>
+                  </li>
+                </ul>
+              </details>
+            </li>
+          </ul>
 
           <button
             v-if="auth.isAuthenticated"
